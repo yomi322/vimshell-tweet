@@ -22,5 +22,21 @@ function! s:command.execute(args, context)
 endfunction
 
 
+function! s:command.complete(args)
+  let arglead = a:args[-1]
+  if arglead =~# '^@'
+    let comp = map(tweetvim#cache#get('screen_name'),
+    \              "{ 'word': '@' . v:val, 'menu': 'tweet' }")
+    return vimshell#complete#helper#keyword_filter(comp, arglead)
+  elseif arglead =~# '^#'
+    let comp = map(tweetvim#cache#get('hash_tag'),
+    \              "{ 'word': '#' . v:val, 'menu': 'tweet' }")
+    return vimshell#complete#helper#keyword_filter(comp, arglead)
+  else
+    return []
+  endif
+endfunction
+
+
 let &cpo = s:save_cpo
 unlet s:save_cpo
