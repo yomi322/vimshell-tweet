@@ -12,11 +12,13 @@ endfunction
 
 
 function! s:command.execute(args, context)
-  try
-    return call('tweetvim#say#command', [join(a:args)])
-  catch /^Vim\%((\a\+)\)\=:E117/
+  if exists(':TweetVimCommandSay')
+    execute 'TweetVimCommandSay' join(a:args)
     return
-  endtry
+  else
+    let message = 'TweetVim is not available'
+    call vimshell#error_line(a:context.fd, message)
+  endif
 endfunction
 
 
